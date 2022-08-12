@@ -1,0 +1,18 @@
+body {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.animate {
+    width: 50px;
+    height: 50px;
+    background-color: green;
+    /* animation: animation 1s infinite; */
+    animation-timing-function: ease;
+    margin-left: 10px;
+}
+
+@keyframes animation {
+    from { transform: rotate(0); }
+    to { transform: rotate(360deg); }
+}
