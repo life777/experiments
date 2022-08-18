@@ -1,0 +1,5 @@
+{
+  "owner": "crossorigin.com",
+  "version": 1,
+  "members": ["example.com"]
+}
