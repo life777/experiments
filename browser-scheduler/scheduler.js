@@ -11,17 +11,17 @@ const action = () => {
     console.log(all);
 };
 
-let taskSignal;
+let tasksSignal;
 document.addEventListener("click", () => {
-    if (taskSignal) {
-        taskSignal.abort(new Error("another action is started"));
+    if (tasksSignal) {
+        tasksSignal.abort(new Error("another action is started"));
     }
 
-    taskSignal = new TaskController({priority: 'user-blocking'});
-    taskSignal.signal.addEventListener("prioritychange", e => {
+    tasksSignal = new TaskController({priority: 'user-blocking'});
+    tasksSignal.signal.addEventListener("prioritychange", e => {
         console.log("prioritychange", e.previousPriority, e.target.priority);
     });
-    taskSignal.setPriority("user-blocking");
+    tasksSignal.setPriority("user-blocking");
 
     console.time("task");
     console.time("task-start");
@@ -30,7 +30,7 @@ document.addEventListener("click", () => {
         console.time("task-action");
         action();
         console.timeEnd("task-action");
-    }, { priority: "background", delay: 1000 , signal: taskSignal.signal })
+    }, { priority: "background", delay: 1000 , signal: tasksSignal.signal })
         .then(() => {
             console.timeEnd("task");
         });
@@ -48,3 +48,22 @@ const animate = (deg) => {
 }
 
 animate(0);
+
+
+
+
+
+let taskSignal = new TaskController({ priority: 'user-blocking' });
+scheduler.postTask(() => {
+    console.log("Real action");
+}, {
+    priority: "background", // user-blocking, user-visible, background
+    delay: 1000,
+    signal: tasksSignal.signal
+})
+    .then(() => {
+        console.log("Done")
+    });
+
+// a few precious seconds after
+taskSignal.abort();
