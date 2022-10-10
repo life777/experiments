@@ -5,7 +5,7 @@ export const getContent = id => {
             .map(a => a.articles)
             .flat()
         )
-        .then(wait(1000));
+        .then(wait(700));
 };
 
 export const getAds = () => wait(1000)();

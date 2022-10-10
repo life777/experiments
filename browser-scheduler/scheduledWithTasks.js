@@ -28,25 +28,22 @@ const loadContent = async () => {
 };
 
 
-const loadAdds = async () => {
+const loadAds = async () => {
     let ads = await getAds();
- 
-    return requestIdleCallback(idle => {
-        renderAds(ads);
-    }, { timeout: 1000 });
+    renderAds(ads);
 };
 
-const requestAndRenderAdsInfo = () => adsWaiting.attach(loadAdds());
+const requestAndRenderAdsInfo = () => adsWaiting.attach(loadAds());
 const requestMainInfo = () => waiting.attach(loadContent());
-const requestMainContent = (articlers, append) => () => {
+const renderMainContent = (articlers, append) => () => {
     renderArticles(articlers, append);
 
     scheduler.postTask(renderImages, { priority: "user-visible" });
 };
 
-const renderMainContent = signal => ([primary, secondary]) => {
-    scheduler.postTask(requestMainContent(primary, false), { priority: "user-blocking", signal });
-    scheduler.postTask(requestMainContent(secondary, true), { priority: "background", signal });
+const requestMainContent = signal => ([primary, secondary]) => {
+    scheduler.postTask(renderMainContent(primary, false), { priority: "user-blocking", signal });
+    scheduler.postTask(renderMainContent(secondary, true), { priority: "background", signal });
 };
 
 
@@ -57,7 +54,7 @@ const renderPage = () => {
     let mainContentTaskController = new TaskController({ priority: "user-blocking" });
     let mainContentRenderController = new TaskController();
     scheduler.postTask(requestMainInfo, { signal: mainContentTaskController.signal })
-        .then(renderMainContent(mainContentRenderController.signal));
+        .then(requestMainContent(mainContentRenderController.signal));
 
     return () => {
         adsTaskController.abort();

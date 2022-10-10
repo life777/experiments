@@ -20,7 +20,7 @@ const loadContent = async () => {
 };
 
 
-const loadAdds = async () => {
+const loadAds = async () => {
     let ads = await getAds();
  
     return requestIdleCallback(idle => {
@@ -36,26 +36,25 @@ const postponeRenderImages = () => {
 }
 
 const renderPage = async () => {
-    let [[primary, secondary], adsHandler] = await Promise.all([
-        // #1 create waiting
-        waiting.attach(loadContent()),
+    // #2 load ads 
+    adsWaiting.attach(loadAds());
 
-        // #2 load ads 
-        adsWaiting.attach(loadAdds())
-    ]);
+    // #1 create waiting
+    let [primary, secondary] = await waiting.attach(loadContent());
 
-    // #1 render primary
+    // #1.1 render primary
     renderArticles(primary);
     let handlerImg = postponeRenderImages();
 
+    // #3 render articles the outside of the screen
     let secondPartHandler = requestIdleCallback(idle => {
         console.log(idle.didTimeout)
         console.log(idle.timeRemaining())
 
         renderArticles(secondary, true);
-        // #3 load images
+        // # load images
         renderImages();
-    }, { timeout: 1000 });
+    }, { timeout: 2000 });
 
     return () => {
         cancelIdleCallback(handlerImg);

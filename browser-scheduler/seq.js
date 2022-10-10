@@ -16,7 +16,7 @@ const renderContent = async () => {
     renderArticles(articles);
 };
 
-const loadAdds = async () => {
+const loadAds = async () => {
     let ads = await getAds();
     renderAds(ads);
 };
@@ -27,7 +27,7 @@ const renderPage = async () => {
         waiting.attach(renderContent()),
 
         // #2 load ads 
-        adsWaiting.attach(loadAdds())
+        adsWaiting.attach(loadAds())
     ]);
 
     // #3 load images

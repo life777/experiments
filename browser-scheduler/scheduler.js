@@ -65,5 +65,8 @@ scheduler.postTask(() => {
         console.log("Done")
     });
 
+// update priority
+taskSignal.setPriority("user-visible");
+
 // a few precious seconds after
 taskSignal.abort();

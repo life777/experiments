@@ -20,7 +20,7 @@ const loadContent = async () => {
 };
 
 
-const loadAdds = async () => {
+const loadAds = async () => {
     let ads = await getAds();
 
     let timer = setTimeout(() => {
@@ -33,12 +33,12 @@ const loadAdds = async () => {
 };
 
 const renderPage = async () => {
-    let [[primary, secondary], ads] = await Promise.all([
+    let [[primary, secondary], _] = await Promise.all([
         // #1 create waiting
         waiting.attach(loadContent()),
 
         // #2 load ads 
-        adsWaiting.attach(loadAdds())
+        adsWaiting.attach(loadAds())
     ]);
 
     // #1 render primary
