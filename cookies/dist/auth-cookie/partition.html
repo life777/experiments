@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2 id="logged-in"></h2>
+    <button id="login">Login</button>
+</body>
+<script>
+    const login = () => {
+        document.querySelector("#logged-in").textContent = `Logged in ${ location.host }`;
+        document.querySelector("#login").textContent = "Logout";
+    };
+
+    const logout = () => {
+        document.querySelector("#logged-in").textContent = ``;
+        document.querySelector("#login").textContent = "Login";
+    }
+
+    if (document.cookie.indexOf("auth-cookie") !== -1) {
+        login();
+    } else {
+        logout();
+    }
+
+    document.querySelector("#login").addEventListener("click", () => {
+        if (document.cookie.indexOf("auth-cookie") !== -1) {
+            fetch("/reset-cookie-partition").then(r => {
+                logout();
+            });
+        } else {
+            fetch("/set-cookie-partition").then(r => {
+                login();
+            });
+            
+        }
+    });
+</script>
+</html>

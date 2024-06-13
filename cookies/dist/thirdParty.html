@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Third party cookie example</h1>
+
+    <div>
+        <h2>local cookie</h2>
+        <iframe src="/auth-cookie/index.html"></iframe>
+    </div>
+
+    <div>
+        <h2>Third party cookie</h2>
+        <iframe src="https://a.example.com/auth-cookie/index.html"></iframe>
+    </div>
+
+    <div>
+        <h2>Third party cookie: Partitioned</h2>
+        <iframe src="https://b.example.com/auth-cookie/partition.html"></iframe>
+    </div>
+
+    <div>
+        <h2>Third party cookie: Storage access</h2>
+        <iframe src="https://c.example.com/auth-cookie/storage-access.html"></iframe>
+    </div>
+</body>
+</html>

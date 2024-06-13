@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2 id="logged-in"></h2>
+    <button id="login">Login</button>
+</body>
+<script>
+    let noAccess = true;
+    const login = () => {
+        document.querySelector("#logged-in").textContent = `Logged in ${ location.host }`;
+        document.querySelector("#login").textContent = "Logout";
+    };
+
+    const logout = () => {
+        document.querySelector("#logged-in").textContent = ``;
+        document.querySelector("#login").textContent = "Login";
+    }
+
+    document.hasStorageAccess().then((hasAccess) => {
+        debugger;
+        if (hasAccess) {
+            if (document.cookie.indexOf("auth-cookie") !== -1) {
+                login();
+            } else {
+                logout();
+            }
+        } else {
+            navigator.permissions.query({ name: "storage-access" })
+                .then(result => {
+                    if (result.state === "granted") {
+                        document.requestStorageAccess().then(() => {
+                            if (document.cookie.indexOf("auth-cookie") !== -1) {
+                                login();
+                            } else {
+                                logout();
+                            }
+                        }, (e) => {
+                            debugger;
+                        });
+                        return;
+                    }
+                })
+        }
+    }).catch(e => {
+        debugger;
+        console.log(e);
+    });
+
+    document.querySelector("#login").addEventListener("click", () => {
+        document.requestStorageAccess().then(() => {
+            if (document.cookie.indexOf("auth-cookie") !== -1) {
+                fetch("/reset-cookie").then(r => {
+                    logout();
+                });
+            } else {
+                fetch("/set-cookie").then(r => {
+                    login();
+                });
+            }
+        }, (e) => {
+            debugger;
+        });
+        
+    });
+</script>
+</html>
